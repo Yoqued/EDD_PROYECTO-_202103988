@@ -10,6 +10,7 @@ module stack_imagenes
         contains
             procedure, pass :: push
             procedure, pass :: pop
+            procedure, pass :: print_stack
     end type stack
 
 contains
@@ -25,20 +26,35 @@ contains
         this%top => new_nodo
     end subroutine push
 
-    function pop(this) result(n_imagen)
+    subroutine pop(this)
         class(stack), intent(inout) :: this
-        integer :: n_imagen
         type(nodo), pointer :: temp
 
         if (associated(this%top)) then
-            n_imagen = this%top%n_imagen
             temp => this%top
             this%top => this%top%next
             deallocate(temp)
         else
             print*, "La pila está vacía"
-            n_imagen = -1
         end if
-    end function pop
+    end subroutine pop
+
+    subroutine print_stack(this)
+        class(stack), intent(inout) :: this
+        type(nodo), pointer :: current
+    
+        if (.not. associated(this%top)) then
+            print*, "La pila está vacía"
+            return
+        end if
+    
+        current => this%top
+        print*, "********************************"
+        do while (associated(current))
+            print*, "Imagen número: ", current%n_imagen
+            current => current%next
+        end do
+        print*, "********************************"
+    end subroutine print_stack
 
 end module stack_imagenes
